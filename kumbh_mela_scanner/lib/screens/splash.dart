@@ -1,17 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:kumbh_mela_scanner/screens/login/views/login_view.dart';
 import 'package:kumbh_mela_scanner/utils/app_icons.dart';
 
-class SpalshView extends StatefulWidget {
-  const SpalshView({super.key});
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
-  State<SpalshView> createState() => _SpalshViewState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SpalshViewState extends State<SpalshView> {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 2));
+    _animation = Tween<double>(begin: 0.1, end: 0.5).animate(_controller);
+    _controller.forward();
+
+    Future.delayed(Duration(seconds: 3), () {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  Scaffold(
       backgroundColor: Colors.white,
       body: Column(
         children: [
@@ -22,7 +48,7 @@ class _SpalshViewState extends State<SpalshView> {
               child: TweenAnimationBuilder<double>(
                 curve: Easing.standardAccelerate,
                 tween: Tween<double>(begin: 300.0, end: 150.0),
-                duration: const Duration(milliseconds: 2000),
+                duration: const Duration(milliseconds: 1000),
                 builder: (BuildContext context, double value, Widget? child) {
                   return Image.asset(
                     AppIcons.logo,
@@ -33,6 +59,7 @@ class _SpalshViewState extends State<SpalshView> {
               ),
             ),
           ),
+          
         ],
       ),
     );
