@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:kumbh_mela_scanner/screens/home/views/home_view.dart';
 
 class LoginProvider with ChangeNotifier {
-
-
-
-
   String _email = '';
   String _password = '';
   bool _isLoading = false;
@@ -36,7 +33,33 @@ class LoginProvider with ChangeNotifier {
     // Add your authentication logic here
   }
 
+  Future<void> handleLogin(BuildContext context) async {
+    if (_email.trim().isEmpty || _password.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Email and Password cannot be empty'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
 
+    _isLoading = true;
+    notifyListeners();
+
+    await login();
+
+    if (!_isLoading) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login Successful!')),
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomePage(),
+        ),
+      );
+    }
+  }
 }
-
-

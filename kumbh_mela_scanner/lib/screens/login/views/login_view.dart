@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kumbh_mela_scanner/screens/home/views/home_view.dart';
 import 'package:kumbh_mela_scanner/screens/login/provider/login_provider.dart';
+import 'package:kumbh_mela_scanner/utils/app_icons.dart';
+import 'package:kumbh_mela_scanner/utils/colors.dart';
+import 'package:kumbh_mela_scanner/widgets/button.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
@@ -11,7 +14,8 @@ class LoginPage extends StatelessWidget {
     final loginProvider = Provider.of<LoginProvider>(context);
 
     void handleLogin() async {
-      if (loginProvider.email.trim().isEmpty || loginProvider.password.trim().isEmpty) {
+      if (loginProvider.email.trim().isEmpty ||
+          loginProvider.password.trim().isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Email and Password cannot be empty'),
@@ -21,7 +25,6 @@ class LoginPage extends StatelessWidget {
         return;
       }
 
-      // Proceed with login
       await loginProvider.login();
 
       if (!loginProvider.isLoading) {
@@ -29,7 +32,6 @@ class LoginPage extends StatelessWidget {
           const SnackBar(content: Text('Login Successful!')),
         );
 
-        // Navigate to Home Page
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -40,27 +42,47 @@ class LoginPage extends StatelessWidget {
     }
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: SafeArea(
+        child: Stack(
           children: [
-            TextField(
-              decoration: const InputDecoration(labelText: 'Email'),
-              onChanged: loginProvider.setEmail,
+            Positioned.fill(
+              child: Opacity(
+                opacity: 0.1,
+                child: Image.asset(
+                  AppIcons.kumbhLogo,
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
-            const SizedBox(height: 16),
-            TextField(
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
-              onChanged: loginProvider.setPassword,
-            ),
-            const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: loginProvider.isLoading ? null : handleLogin,
-              child: loginProvider.isLoading
-                  ? const CircularProgressIndicator(color: Colors.white)
-                  : const Text('Login'),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset(
+                  AppIcons.logo,
+                  
+                ),
+                SizedBox(height: 10,),
+                  TextField(
+                    decoration: const InputDecoration(labelText: 'Email'),
+                    onChanged: loginProvider.setEmail,
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    decoration: const InputDecoration(labelText: 'Password'),
+                    obscureText: true,
+                    onChanged: loginProvider.setPassword,
+                  ),
+                  const SizedBox(height: 32),
+                  CustomButton(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    label: "Login",
+                    onTap: loginProvider.isLoading ? null : handleLogin,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
